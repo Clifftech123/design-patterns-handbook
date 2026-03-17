@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  A practical guide to understanding software design patterns — for every developer, regardless of language. Examples are written in C#, but every concept here applies equally to Python, Java, TypeScript, Go, and beyond.
+  A practical guide to understanding software design patterns, for every developer, regardless of language. Examples are written in C#, but every concept here applies equally to Python, Java, TypeScript, Go, and beyond.
 </p>
 
 ---
@@ -11,7 +11,7 @@
 Introduction
 ============
 
-Design patterns are **reusable solutions to common problems in software design**. Think of them as blueprints — not finished code, but proven templates you can adapt to solve a specific problem in your own codebase.
+Design patterns are **reusable solutions to common problems in software design**. Think of them as blueprints: not finished code, but proven templates you can adapt to solve a specific problem in your own codebase.
 
 > *"In software engineering, a software design pattern is a general, reusable solution to a commonly occurring problem within a given context in software design. It is not a finished design that can be transformed directly into source or machine code. It is a description or template for how to solve a problem that can be used in many different situations."*
 >
@@ -19,13 +19,13 @@ Design patterns are **reusable solutions to common problems in software design**
 
 ### Things to keep in mind
 
-- **Design patterns are not code.** They are a way of *thinking* about how to structure your code. They are a tool — not a silver bullet — for solving specific design problems.
+- **Design patterns are not code.** They are a way of *thinking* about how to structure your code. They are a tool, not a silver bullet, for solving specific design problems.
 
-- **The concepts are universal.** The examples here are written in C#, but the same patterns exist in every language. If you write Python, Java, Go, or TypeScript — you are already using some of these without knowing it.
+- **The concepts are universal.** The examples here are written in C#, but the same patterns exist in every language. If you write Python, Java, Go, or TypeScript, you are already using some of these without knowing it.
 
 - **There is no one-size-fits-all pattern.** Each pattern exists to address a particular kind of problem. Understanding *what problem a pattern solves* is more important than memorising the implementation.
 
-> C# is used here as the teaching language — it is clear, readable, and widely understood. But the goal of this handbook is for you to walk away understanding the pattern itself, not just the C# code.
+> C# is used here as the teaching language. It is clear, readable, and widely understood. The goal of this handbook is for you to walk away understanding the pattern itself, not just the C# code.
 
 ---
 
@@ -43,7 +43,7 @@ Creational Design Patterns
 
 Simply put:
 
-> Creational patterns are all about **how objects are created**. They can be divided into class-creation patterns — which use inheritance to decide which class to instantiate — and object-creation patterns, which use delegation to get the job done.
+> Creational patterns are all about **how objects are created**. They can be divided into class-creation patterns, which use inheritance to decide which class to instantiate, and object-creation patterns, which use delegation to get the job done.
 
 Wikipedia describes them as:
 
@@ -74,19 +74,19 @@ Singleton
 
 ### Real World Example
 
-Think of the **conductor of an orchestra**. An orchestra has one conductor. Every musician on stage looks to that same conductor for direction , when to start, when to stop, how fast to play, how loud to go. The conductor is the single point of authority that all musicians connect to and take decisions from. You cannot have two conductors standing at the front giving different instructions , that would cause chaos. No matter which musician needs guidance, they all reach the same one person.
+Think of the **conductor of an orchestra**. An orchestra has one conductor. Every musician on stage looks to that same conductor for direction: when to start, when to stop, how fast to play, how loud to go. The conductor is the single point of authority that all musicians connect to and take decisions from. You cannot have two conductors standing at the front giving different instructions. That would cause chaos. No matter which musician needs guidance, they all reach the same one person.
 
 That is exactly how the Singleton works in code. One instance, shared by everyone who needs it, making decisions from one place.
 
 ### Problems it solves
 
-- **What if two musicians get different conductors giving different instructions?** The performance falls apart. There must be one conductor that every musician looks to — no exceptions.
+- **What if two musicians get different conductors giving different instructions?** The performance falls apart. There must be one conductor that every musician looks to, without exception.
 - **How does a musician find the conductor?** They do not go searching. There is one well-known place everyone looks, and the same conductor is always there.
-- **What stops someone from appointing a second conductor?** The orchestra itself controls this — once a conductor is on the podium, no second one can take it.
+- **What stops someone from appointing a second conductor?** The orchestra itself controls this. Once a conductor is on the podium, no second one can take it.
 
 ### In Simple Terms
 
-> There is only one instance of the class, and every part of the system that needs it gets access to that exact same instance — never a new one.
+> There is only one instance of the class, and every part of the system that needs it gets access to that exact same instance. Never a new one.
 
 ### Wikipedia describes it as:
 
@@ -96,7 +96,7 @@ That is exactly how the Singleton works in code. One instance, shared by everyon
 
 ### Programming Example
 
-We model the analogy directly. The `OrchestraConductor` is the Singleton — one instance, shared by all musicians, making all decisions.
+We model the analogy directly. The `OrchestraConductor` is the Singleton: one instance, shared by all musicians, making all decisions.
 
 ```csharp
 public class OrchestraConductor
@@ -104,7 +104,7 @@ public class OrchestraConductor
     // Step 1: Hold the one instance here
     private static OrchestraConductor _instance;
 
-    // Step 2: Private constructor — nobody outside can do: new OrchestraConductor()
+    // Step 2: Private constructor - nobody outside can do: new OrchestraConductor()
     private OrchestraConductor() { }
 
     // Step 3: The only way to get the conductor
@@ -152,14 +152,14 @@ Conductor: Begin playing.
 
 ### When to use it
 
-- When you need **one shared resource** that the whole application talks to — such as a logger, a configuration manager, or a database connection pool
+- When you need **one shared resource** that the whole application talks to, such as a logger, a configuration manager, or a database connection pool
 - When having more than one instance would cause **incorrect behaviour** or conflicting state
 - When you want a **global point of access** to an object without passing it around everywhere
 
 ### When NOT to use it
 
 - When it makes your code hard to test because of hidden shared state
-- When it is simply being used as a convenient global variable — that is not what it is for
+- When it is simply being used as a convenient global variable. That is not what it is for.
 
 ---
 
@@ -168,14 +168,14 @@ Factory Method
 
 ### Real World Example
 
-Think of a **recruitment agency**. A company calls the agency and says "we need a worker." The company does not go out and create the worker themselves — they just make the request. The agency decides which specific person to send: a developer, a designer, or a tester, depending on what the company needs. The company does not know or care exactly who is coming — they just know the person will be able to do the job.
+Think of a **recruitment agency**. A company calls the agency and says "we need a worker." The company does not go out and create the worker themselves. They just make the request. The agency decides which specific person to send: a developer, a designer, or a tester, depending on what the company needs. The company does not know or care exactly who is coming. They just know the person will be able to do the job.
 
 That is the Factory Method. Your code asks for an object. The factory decides which specific type to create and hands it back. You work with it without needing to know exactly what it is under the hood.
 
 ### Problems it solves
 
-- **The company should not need to know who they are getting.** They just need someone who can do the job. The agency handles the decision of who to send — the company never has to worry about the details.
-- **What if the company needs a different type of worker tomorrow?** They call the same agency. The agency decides. The company's process does not change — only the agency's decision does.
+- **The company should not need to know who they are getting.** They just need someone who can do the job. The agency handles the decision of who to send. The company never has to worry about the details.
+- **What if the company needs a different type of worker tomorrow?** They call the same agency. The agency decides. The company's process does not change, only the agency's decision does.
 - **What if a new type of worker needs to be introduced?** A new specialist agency is created to handle that. Everything else stays exactly the same.
 
 ### In Simple Terms
@@ -193,7 +193,7 @@ That is the Factory Method. Your code asks for an object. The factory decides wh
 The agency is the factory. The worker types are the products. The company is the client.
 
 ```csharp
-// The worker interface — all workers can do a job
+// The worker interface - all workers can do a job
 public interface IWorker
 {
     void DoWork();
@@ -214,16 +214,16 @@ public class Designer : IWorker
 ```
 
 ```csharp
-// The base agency — declares the factory method
+// The base agency - declares the factory method
 public abstract class RecruitmentAgency
 {
-    // This is the Factory Method — subclasses decide who to hire
+    // This is the Factory Method - subclasses decide who to hire
     public abstract IWorker HireWorker();
 }
 ```
 
 ```csharp
-// Concrete agencies — each one decides which worker to send
+// Concrete agencies - each one decides which worker to send
 public class TechAgency : RecruitmentAgency
 {
     public override IWorker HireWorker() => new Developer();
@@ -259,11 +259,11 @@ Designer: Creating designs.
 
 ### When to use it
 
-- When your code should **not care about the exact type** of object it is working with — only that it fulfils a certain contract
-- When you want to **add new types** without changing the code that uses them — just add a new subclass
+- When your code should **not care about the exact type** of object it is working with, only that it fulfils a certain contract
+- When you want to **add new types** without changing the code that uses them. Just add a new subclass.
 - When the responsibility for **deciding what to create** belongs to a specific part of your system, not the caller
 
 ### When NOT to use it
 
-- When there is only ever one type of object to create — a factory adds unnecessary complexity in that case
+- When there is only ever one type of object to create. A factory adds unnecessary complexity in that case.
 - When the creation logic is simple enough that a direct `new` call is perfectly clear
