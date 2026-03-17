@@ -74,7 +74,7 @@ Singleton
 
 ### Real World Example
 
-Think of the **conductor of an orchestra**. An orchestra has one conductor. Every musician on stage looks to that same conductor for direction: when to start, when to stop, how fast to play, how loud to go. The conductor is the single point of authority that all musicians connect to and take decisions from. You cannot have two conductors standing at the front giving different instructions. That would cause chaos. No matter which musician needs guidance, they all reach the same one person.
+> Think of the **conductor of an orchestra**. An orchestra has one conductor. Every musician on stage looks to that same conductor for direction: when to start, when to stop, how fast to play, how loud to go. The conductor is the single point of authority that all musicians connect to and take decisions from. You cannot have two conductors standing at the front giving different instructions. That would cause chaos. No matter which musician needs guidance, they all reach the same one person.
 
 That is exactly how the Singleton works in code. One instance, shared by everyone who needs it, making decisions from one place.
 
@@ -156,10 +156,6 @@ Conductor: Begin playing.
 - When having more than one instance would cause **incorrect behaviour** or conflicting state
 - When you want a **global point of access** to an object without passing it around everywhere
 
-### When NOT to use it
-
-- When it makes your code hard to test because of hidden shared state
-- When it is simply being used as a convenient global variable. That is not what it is for.
 
 ---
 
@@ -168,7 +164,7 @@ Factory Method
 
 ### Real World Example
 
-Think of a **recruitment agency**. A company calls the agency and says "we need a worker." The company does not go out and create the worker themselves. They just make the request. The agency decides which specific person to send: a developer, a designer, or a tester, depending on what the company needs. The company does not know or care exactly who is coming. They just know the person will be able to do the job.
+ > Think of a **recruitment agency**. A company calls the agency and says "we need a worker." The company does not go out and create the worker themselves. They just make the request. The agency decides which specific person to send: a developer, a designer, or a tester, depending on what the company needs. The company does not know or care exactly who is coming. They just know the person will be able to do the job.
 
 That is the Factory Method. Your code asks for an object. The factory decides which specific type to create and hands it back. You work with it without needing to know exactly what it is under the hood.
 
@@ -257,13 +253,336 @@ Designer: Creating designs.
 
 > The company never used `new Developer()` or `new Designer()` directly. The agency made that decision. That is the Factory Method.
 
+---
+
+Abstract Factory
+-------------------
+
+### Real World Example
+
+> Think of a **furniture store that sells collections**. You walk in and choose a style: Modern or Victorian. Once you choose, everything you get comes from that same collection. The sofa, the chair, the coffee table all match. The store ensures you never walk out with a modern sofa paired with a Victorian chair. You do not pick individual pieces and hope they go together. The collection guarantees they will.
+>
+> That is the Abstract Factory. You choose a family, and the factory produces every object you need from that same family. Everything it gives you is guaranteed to work together.
+
+### Problems it solves
+
+- **What if a customer mixes furniture from different collections?** The room looks inconsistent. The store solves this by grouping everything into collections. You pick one collection and everything comes from it.
+- **What if the store wants to introduce a new collection?** They create a new collection set. Every existing collection stays untouched. The customer's experience does not change, only the options grow.
+- **What if different stores carry different collections?** Each store is its own factory. A customer walks into any store and follows the same process. The store handles which specific pieces to provide.
+
+### In Simple Terms
+
+> Provide an interface for creating families of related objects, without specifying their concrete classes.
+
+### Wikipedia describes it as:
+
+> *"The abstract factory pattern provides a way to create families of related objects without imposing their concrete classes, by encapsulating a group of individual factories that have a common theme without specifying their concrete classes."*
+>
+> **Source:** [Wikipedia - Abstract factory pattern](https://en.wikipedia.org/wiki/Abstract_factory_pattern)
+
+### Programming Example
+
+The furniture store is the abstract factory. Modern and Victorian are the concrete factories. Sofa and Chair are the products.
+
+```csharp
+// The product interfaces - every furniture type has a contract
+public interface ISofa  { void Describe(); }
+public interface IChair { void Describe(); }
+```
+
+```csharp
+// Modern collection
+public class ModernSofa : ISofa
+{
+    public void Describe() => Console.WriteLine("Sofa: Sleek modern design.");
+}
+
+public class ModernChair : IChair
+{
+    public void Describe() => Console.WriteLine("Chair: Minimalist modern style.");
+}
+```
+
+```csharp
+// Victorian collection
+public class VictorianSofa : ISofa
+{
+    public void Describe() => Console.WriteLine("Sofa: Ornate Victorian design.");
+}
+
+public class VictorianChair : IChair
+{
+    public void Describe() => Console.WriteLine("Chair: Classic Victorian style.");
+}
+```
+
+```csharp
+// The abstract factory - every store can produce a sofa and a chair
+public interface IFurnitureFactory
+{
+    ISofa  CreateSofa();
+    IChair CreateChair();
+}
+```
+
+```csharp
+// Concrete factories - each one produces its own collection
+public class ModernFurnitureFactory : IFurnitureFactory
+{
+    public ISofa  CreateSofa()  => new ModernSofa();
+    public IChair CreateChair() => new ModernChair();
+}
+
+public class VictorianFurnitureFactory : IFurnitureFactory
+{
+    public ISofa  CreateSofa()  => new VictorianSofa();
+    public IChair CreateChair() => new VictorianChair();
+}
+```
+
+Now let's see it in action:
+
+```csharp
+// Customer orders a Modern collection
+IFurnitureFactory factory = new ModernFurnitureFactory();
+ISofa  sofa  = factory.CreateSofa();
+IChair chair = factory.CreateChair();
+sofa.Describe();
+chair.Describe();
+
+// Customer orders a Victorian collection
+IFurnitureFactory factory2 = new VictorianFurnitureFactory();
+ISofa  sofa2  = factory2.CreateSofa();
+IChair chair2 = factory2.CreateChair();
+sofa2.Describe();
+chair2.Describe();
+```
+
+**Output:**
+```
+Sofa: Sleek modern design.
+Chair: Minimalist modern style.
+Sofa: Ornate Victorian design.
+Chair: Classic Victorian style.
+```
+
+> Every piece came from the same collection. The client never used `new ModernSofa()` or `new VictorianChair()` directly. The factory kept the family together. That is the Abstract Factory.
+
 ### When to use it
 
-- When your code should **not care about the exact type** of object it is working with, only that it fulfils a certain contract
-- When you want to **add new types** without changing the code that uses them. Just add a new subclass.
-- When the responsibility for **deciding what to create** belongs to a specific part of your system, not the caller
+- When your system needs to work with **multiple families of related objects** and you need to ensure they are always used together
+- When you want to **swap out an entire family** of objects in one place without touching the rest of your code
+- When you want to **enforce consistency** across related objects, so nothing from one family gets accidentally mixed with another
 
-### When NOT to use it
+---
 
-- When there is only ever one type of object to create. A factory adds unnecessary complexity in that case.
-- When the creation logic is simple enough that a direct `new` call is perfectly clear
+Builder
+-------------------
+
+### Real World Example
+
+> Think of a **tailor making a suit**. Every customer that walks in goes through the same process: take measurements, choose the fabric, select the lining, pick the buttons, decide on the lapel style. The tailor follows those same steps for every order. But the finished suit is completely unique to each customer. A businessman walks out with a sharp formal suit. A wedding guest walks out with something entirely different. Same process, same tailor, different result every time.
+>
+> That is the Builder. The construction process stays the same. What changes are the choices made at each step.
+
+### Problems it solves
+
+- **What if a suit had to be assembled all at once with no steps?** You would have to know every detail upfront and get it all right in one go. The tailor breaks it down into steps so each decision is made clearly, one at a time.
+- **What if two customers want completely different suits but go through the same tailor?** The tailor follows the same process for both. The steps do not change, only the choices within each step.
+- **What if a new suit style needs to be introduced?** A new set of choices is defined for that style. The tailoring process itself stays untouched.
+
+### In Simple Terms
+
+> Separate the construction of a complex object from its representation, so that the same construction process can create different results.
+
+### Wikipedia describes it as:
+
+> *"The Builder pattern separates the construction of a complex object from its representation so that the same construction process can create different representations."*
+>
+> **Source:** [Wikipedia - Builder pattern](https://en.wikipedia.org/wiki/Builder_pattern)
+
+### Programming Example
+
+The tailor is the director. The suit is the product. The builder handles the step-by-step construction.
+
+```csharp
+// The product
+public class Suit
+{
+    public string Fabric  { get; set; }
+    public string Lining  { get; set; }
+    public string Buttons { get; set; }
+
+    public void Describe()
+    {
+        Console.WriteLine($"Suit: {Fabric} fabric, {Lining} lining, {Buttons} buttons.");
+    }
+}
+```
+
+```csharp
+// The builder - defines the steps
+public interface ISuitBuilder
+{
+    void SetFabric();
+    void SetLining();
+    void SetButtons();
+    Suit GetSuit();
+}
+```
+
+```csharp
+// Business suit builder
+public class BusinessSuitBuilder : ISuitBuilder
+{
+    private Suit _suit = new Suit();
+
+    public void SetFabric()  => _suit.Fabric  = "Dark wool";
+    public void SetLining()  => _suit.Lining  = "Silk";
+    public void SetButtons() => _suit.Buttons = "Black horn";
+    public Suit GetSuit()    => _suit;
+}
+
+// Wedding suit builder
+public class WeddingSuitBuilder : ISuitBuilder
+{
+    private Suit _suit = new Suit();
+
+    public void SetFabric()  => _suit.Fabric  = "Ivory linen";
+    public void SetLining()  => _suit.Lining  = "Satin";
+    public void SetButtons() => _suit.Buttons = "Pearl";
+    public Suit GetSuit()    => _suit;
+}
+```
+
+```csharp
+// The tailor - the director who runs the process
+public class Tailor
+{
+    public Suit MakeSuit(ISuitBuilder builder)
+    {
+        builder.SetFabric();
+        builder.SetLining();
+        builder.SetButtons();
+        return builder.GetSuit();
+    }
+}
+```
+
+Now let's see it in action:
+
+```csharp
+Tailor tailor = new Tailor();
+
+Suit businessSuit = tailor.MakeSuit(new BusinessSuitBuilder());
+businessSuit.Describe();
+
+Suit weddingSuit = tailor.MakeSuit(new WeddingSuitBuilder());
+weddingSuit.Describe();
+```
+
+**Output:**
+```
+Suit: Dark wool fabric, Silk lining, Black horn buttons.
+Suit: Ivory linen fabric, Satin lining, Pearl buttons.
+```
+
+> The same tailor, the same process, two completely different suits. That is the Builder.
+
+### When to use it
+
+- When an object has **many parts or configurations** and building it all at once would be confusing
+- When you want the **same construction process** to produce different results depending on the choices made at each step
+- When you want to keep the **construction logic separate** from the object itself, so each can change independently
+
+---
+
+Prototype
+-------------------
+
+### Real World Example
+
+> Imagine you are building a drawing application. Users can create shapes — circles, rectangles, triangles — each with its own colour, size, and position. Now imagine the user wants ten red circles of the same size placed across the canvas. Creating each one from scratch means repeating the same setup ten times. What if the shape is complex, with many configured properties? That becomes expensive and repetitive.
+>
+> The Prototype pattern solves this by letting you take one fully configured shape and clone it. The clone starts as an exact copy. The user then moves it, recolours it, or resizes it independently. The original shape is never touched. This also means new shape types can be added at runtime without the application needing to know about them in advance.
+
+### Problems it solves
+
+- **Creating a new shape from scratch every time is expensive.** If a shape has many properties, setting them all up repeatedly wastes resources. Cloning an already configured object is far cheaper.
+- **The application should not need to know the exact type of shape it is copying.** At runtime, shapes can be added or removed dynamically. The app just calls clone and gets back a ready object, whatever type it happens to be.
+- **Modifying a copy should never affect the original.** Each cloned shape is fully independent. Changes to the copy stay with the copy.
+
+### In Simple Terms
+
+> Create new objects by copying an existing one. The copy starts identical to the original and can then be changed independently.
+
+### Wikipedia describes it as:
+
+> *"The Prototype pattern is used when the type of objects to create is determined by a prototypical instance, which is cloned to produce new objects."*
+>
+> **Source:** [Wikipedia - Prototype pattern](https://en.wikipedia.org/wiki/Prototype_pattern)
+
+### Programming Example
+
+Every shape knows how to clone itself. The application never calls `new Circle()` or `new Rectangle()` directly at runtime — it clones what already exists.
+
+```csharp
+// The prototype interface - every shape must be able to clone itself
+public abstract class Shape
+{
+    public string Colour { get; set; }
+    public int    Size   { get; set; }
+
+    public abstract Shape Clone();
+    public abstract void  Describe();
+}
+```
+
+```csharp
+// Concrete shapes
+public class Circle : Shape
+{
+    public override Shape Clone()    => (Shape)this.MemberwiseClone();
+    public override void  Describe() => Console.WriteLine($"Circle  | Colour: {Colour} | Size: {Size}");
+}
+
+public class Rectangle : Shape
+{
+    public override Shape Clone()    => (Shape)this.MemberwiseClone();
+    public override void  Describe() => Console.WriteLine($"Rectangle | Colour: {Colour} | Size: {Size}");
+}
+```
+
+Now let's see it in action:
+
+```csharp
+// Create one configured circle
+Circle original = new Circle { Colour = "Red", Size = 50 };
+
+// Clone it instead of building from scratch
+Shape clone1 = original.Clone();
+Shape clone2 = original.Clone();
+
+// Modify the clones independently
+clone2.Colour = "Blue";
+
+original.Describe();
+clone1.Describe();
+clone2.Describe();
+```
+
+**Output:**
+```
+Circle  | Colour: Red  | Size: 50
+Circle  | Colour: Red  | Size: 50
+Circle  | Colour: Blue | Size: 50
+```
+
+> `clone2` changed to blue. The original stayed red. Each object is fully independent. That is the Prototype.
+
+### When to use it
+
+- When creating a new object from scratch is **expensive or complex** and an existing object already has everything configured
+- When the application needs to create objects **at runtime without knowing their exact type** in advance
+- When you need many variations of an object and want to **start from a known good state** rather than rebuild every time
+
