@@ -1,5 +1,5 @@
 <p align="center">
-  <strong>Design Patterns in C#</strong>  A complete breakdown of all classic design patterns, implemented and explained in C#. While the code examples use C#, the concepts are universal and apply to any programming language.
+  <strong>Design Patterns in C#</strong> — A complete breakdown of all classic design patterns, implemented and explained in C#. While the code examples use C#, the concepts are universal and apply to any programming language.
 </p>
 
 ---
@@ -11,7 +11,7 @@ Design patterns are **reusable solutions to common problems in software design**
 
 > *"In software engineering, a software design pattern is a general, reusable solution to a commonly occurring problem within a given context in software design. It is not a finished design that can be transformed directly into source or machine code. It is a description or template for how to solve a problem that can be used in many different situations."*
 >
-> — Wikipedia
+> **Source:** [Wikipedia - Software design pattern](https://en.wikipedia.org/wiki/Software_design_pattern)
 
 ### Things to keep in mind
 
@@ -32,5 +32,34 @@ Types of Design Patterns
 * [Structural Design Patterns](#structural-design-patterns)
 * [Behavioral Design Patterns](#behavioral-design-patterns)
 
+---
 
+Creational Design Patterns
+===========================
 
+Simply put:
+
+> Creational patterns are all about **how objects are created**. They can be divided into class-creation patterns — which use inheritance to decide which class to instantiate — and object-creation patterns, which use delegation to get the job done.
+
+Wikipedia describes them as:
+
+> *"In software engineering, creational patterns are design patterns that deal with object creation mechanisms, trying to create objects in a manner suitable to the situation. A creational pattern aims to separate a system from how its objects are created, composed, and represented. They increase the system's flexibility in terms of the what, who, how, and when of object creation."*
+>
+> **Source:** [Wikipedia - Creational pattern](https://en.wikipedia.org/wiki/Creational_pattern)
+
+- They keep the details of object creation **hidden from the client code**, making the system easier to manage and maintain.
+- They abstract away how objects are created, composed, and represented, so the rest of your code does not need to care.
+
+There are **5 creational design patterns**:
+
+1. **Singleton**: Ensures a class has only one instance and provides a global point of access to it.
+2. **Factory Method**: Defines an interface for creating an object, but lets subclasses decide which class to instantiate.
+3. **Abstract Factory**: Provides an interface for creating families of related or dependent objects without specifying their concrete classes.
+4. **Builder**: Separates the construction of a complex object from its representation, so the same construction process can produce different results.
+5. **Prototype**: Creates new objects by cloning an existing instance rather than building one from scratch.
+
+* [Factory Method](#factory-method)
+* [Abstract Factory](#abstract-factory)
+* [Builder](#builder)
+* [Prototype](#prototype)
+* [Singleton](#singleton)
